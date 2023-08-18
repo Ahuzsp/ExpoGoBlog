@@ -15,7 +15,11 @@ export default function HomeScreen() {
 					headerTitleAlign: "center"
 				}}
 			/>
-			<Stack.Screen name="List" component={ListScreen} />
+			<Stack.Screen
+				name="List"
+				component={ListScreen}
+				options={{ title: "文章列表" }}
+			/>
 			<Stack.Screen
 				name="Detail"
 				component={DetailScreen}

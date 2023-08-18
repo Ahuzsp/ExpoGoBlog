@@ -1,18 +1,29 @@
-import { View, Image, Text, Button, Dimensions, ScrollView } from "react-native"
+import {
+	View,
+	Image,
+	ActivityIndicator,
+	Button,
+	Dimensions,
+	ScrollView
+} from "react-native"
 import { useEffect, useState } from "react"
 import { apiArticleList } from "../../api/article"
 
 import Item from "./item"
 const contentWidth = Dimensions.get("window").width
+const contentHeight = Dimensions.get("window").height
 export default function List({ navigation, route }) {
+	const [isLoading, setLoading] = useState(false)
 	const [articleList, setArticleList] = useState([])
 	const { category } = route.params
 	useEffect(() => {
 		function getArticleData() {
+			setLoading(true)
 			apiArticleList({ query: { category } })
 				.then((res) => {
 					if (res.code === 0) {
 						setArticleList(res.data)
+						setLoading(false)
 					}
 				})
 				.catch((err) => {
@@ -23,10 +34,18 @@ export default function List({ navigation, route }) {
 	}, [category])
 	return (
 		<View>
-			{articleList?.length ? (
+			{isLoading ? (
+				<View style={{ justifyContent: "center", height: contentHeight }}>
+					<ActivityIndicator size="large" color="green" />
+				</View>
+			) : articleList.length ? (
 				<ScrollView>
 					<View
-						style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+						style={{
+							flex: 1,
+							alignItems: "center",
+							justifyContent: "center"
+						}}
 					>
 						{articleList.map((item) => {
 							return (
@@ -41,7 +60,7 @@ export default function List({ navigation, route }) {
 				</ScrollView>
 			) : (
 				<Image
-					source={require("../../assets/default/no_data.png")}
+					source={require("../../assets/default/no_data3.png")}
 					style={{ width: contentWidth }}
 				></Image>
 			)}

@@ -48,7 +48,8 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		height: 120,
 		fontSize: 16,
-		paddingHorizontal: 10
+		paddingHorizontal: 10,
+		backgroundColor: "#fff"
 	},
 	info: {
 		flex: 1,

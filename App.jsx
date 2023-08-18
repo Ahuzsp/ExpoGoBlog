@@ -9,6 +9,19 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 
 const Tab = createBottomTabNavigator()
 export default function App() {
+	// useEffect(async () => {
+	// 	await Font.loadAsync(
+	// 		"antoutline",
+	// 		// eslint-disable-next-line
+	// 		require("@ant-design/icons-react-native/fonts/antoutline.ttf")
+	// 	)
+
+	// 	await Font.loadAsync(
+	// 		"antfill",
+	// 		// eslint-disable-next-line
+	// 		require("@ant-design/icons-react-native/fonts/antfill.ttf")
+	// 	)
+	// })
 	return (
 		<NavigationContainer>
 			<Tab.Navigator

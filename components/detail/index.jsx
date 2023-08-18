@@ -8,7 +8,7 @@ import {
 	ScrollView,
 	Dimensions,
 	Pressable,
-	useWindowDimensions
+	ActivityIndicator
 } from "react-native"
 import moment from "moment"
 import { getDetailById } from "../../api/article"
@@ -16,13 +16,15 @@ import { getUserInfoByUserId } from "../../api/user"
 import HTML from "react-native-render-html"
 
 const contentWidth = Dimensions.get("window").width
+const contentHeight = Dimensions.get("window").height
 export default function DetailsScreen({ route }) {
-	const [loading, setLoading] = useState(true)
+	const [loading, setLoading] = useState(false)
 	const [detail, setDetail] = useState({})
 	const [userInfo, setUserInfo] = useState({})
 	const { userId, id } = route.params
 	useEffect(() => {
 		async function featchData() {
+			setLoading(true)
 			const user = getUserInfoByUserId({ userId })
 			const article = getDetailById({ articleId: id })
 			const res = await Promise.all([user, article]).catch((err) =>
@@ -37,21 +39,17 @@ export default function DetailsScreen({ route }) {
 
 	return (
 		<ScrollView>
-			{!loading && (
+			{loading ? (
+				<View style={styles.indicator}>
+					<ActivityIndicator size="large" color="green" />
+				</View>
+			) : (
 				<View style={styles.container}>
 					<View style={styles.title}>
 						<Text style={styles.ft24}>{detail.articleTitle}</Text>
 					</View>
 
-					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "space-between",
-							alignItems: "center",
-							marginTop: 10,
-							marginBottom: 20
-						}}
-					>
+					<View style={styles.user}>
 						<View
 							style={{ flexDirection: "row", justifyContent: "space-between" }}
 						>
@@ -73,7 +71,7 @@ export default function DetailsScreen({ route }) {
 									<Text>
 										{moment(+detail.releaseTime).format("YYYY-MM-DD HH:mm:ss")}
 									</Text>
-									&nbsp; &nbsp;
+									&nbsp;&nbsp;
 									<Text>字数:{detail.wordCount}</Text>
 								</Text>
 							</View>
@@ -99,26 +97,40 @@ export default function DetailsScreen({ route }) {
 						}}
 					/>
 					{/* <Text>Detail Screen</Text>
-			<Button
-				title="Go to Details... again"
-				onPress={() => navigation.push("Detail")}
-			/>
-			<Button title="Go back" onPress={() => navigation.goBack()} />
-			<Button
-				title="Go back to first screen in stack"
-				onPress={() => navigation.popToTop()}
-			/> */}
+						<Button
+							title="Go to Details... again"
+							onPress={() => navigation.push("Detail")}
+						/>
+						<Button title="Go back" onPress={() => navigation.goBack()} />
+						<Button
+							title="Go back to first screen in stack"
+							onPress={() => navigation.popToTop()}
+						/> */}
 				</View>
 			)}
 		</ScrollView>
 	)
 }
 const styles = StyleSheet.create({
+	indicator: {
+		justifyContent: "center",
+		height: contentHeight
+	},
 	container: {
 		paddingHorizontal: 8
 	},
 	title: {
 		marginVertical: 10
+	},
+	user: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginTop: 10,
+		marginBottom: 20,
+		padding: 5,
+		backgroundColor: "#fff",
+		borderRadius: 4
 	},
 	ft16: {
 		fontSize: 16
