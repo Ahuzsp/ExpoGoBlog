@@ -12,7 +12,12 @@ const Carousel = ({ navigation }) => {
 				dotStyle={styles.dot}
 				activeDotStyle={styles.activeDot}
 			>
-				<View style={styles.slide}>
+				<View
+					style={styles.slide}
+					onPress={() => {
+						avigation.navigate("Detail", { id: 7, userId: 1 })
+					}}
+				>
 					<Image
 						source={{ uri: "http:ahuzsp.top/images/4.jpg" }}
 						style={{
@@ -20,12 +25,14 @@ const Carousel = ({ navigation }) => {
 							height: 150,
 							borderRadius: 15
 						}}
-						onTouchEnd={() => {
-							navigation.navigate("Detail", { id: 7, userId: 1 })
-						}}
 					/>
 				</View>
-				<View style={styles.slide}>
+				<View
+					style={styles.slide}
+					onPress={() => {
+						navigation.navigate("Detail", { id: 27, userId: 1 })
+					}}
+				>
 					<Image
 						source={{ uri: "http:ahuzsp.top/images/2.jpg" }}
 						style={{
@@ -33,21 +40,20 @@ const Carousel = ({ navigation }) => {
 							height: 150,
 							borderRadius: 15
 						}}
-						onTouchEnd={() => {
-							navigation.navigate("Detail", { id: 27, userId: 1 })
-						}}
 					/>
 				</View>
-				<View style={styles.slide}>
+				<View
+					style={styles.slide}
+					onPress={() => {
+						navigation.navigate("Detail", { id: 12, userId: 1 })
+					}}
+				>
 					<Image
 						source={{ uri: "http:ahuzsp.top/images/3.jpg" }}
 						style={{
 							width: Dimensions.get("window").width,
 							height: 150,
 							borderRadius: 15
-						}}
-						onTouchEnd={() => {
-							navigation.navigate("Detail", { id: 12, userId: 1 })
 						}}
 					/>
 				</View>

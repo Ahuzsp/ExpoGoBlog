@@ -41,8 +41,7 @@ service.interceptors.response.use(
 	},
 	(error) => {
 		const { response } = error
-		const { code, msg } = response.data
-		console.log(msg)
+		return response.data
 		// 下面这样调用会报错
 		// const showMessage = useMessage()
 		// showMessage("error", `code:${code}, ${msg}`)

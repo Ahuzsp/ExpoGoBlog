@@ -15,7 +15,11 @@ const contentHeight = Dimensions.get("window").height
 export default function List({ navigation, route }) {
 	const [isLoading, setLoading] = useState(false)
 	const [articleList, setArticleList] = useState([])
-	const { category } = route.params
+	let category = 1
+
+	if (route && route.params && route.params.category) {
+		category = route.params.category
+	}
 	useEffect(() => {
 		function getArticleData() {
 			setLoading(true)

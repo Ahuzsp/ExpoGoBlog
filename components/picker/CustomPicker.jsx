@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import {
 	View,
 	TouchableOpacity,
+	TouchableWithoutFeedback,
 	Text,
 	Modal,
 	StyleSheet,
@@ -16,6 +17,7 @@ const CustomPicker = ({ options, onValueChange }) => {
 	const handleSelect = (label, value) => {
 		setSelectedValue(label)
 		setPickerVisible(false)
+		console.log(value)
 		onValueChange(value)
 	}
 
@@ -29,17 +31,14 @@ const CustomPicker = ({ options, onValueChange }) => {
 				style={{
 					height: 40,
 					borderRadius: 5,
-					backgroundColor: "white",
 					borderWidth: 1,
 					borderColor: "rgb(200, 200, 200)"
 				}}
 				onPress={togglePicker}
 			>
-				<TextInput
-					value={selectedValue}
-					readOnly={true}
-					style={styles.baseInput}
-				/>
+				<View style={styles.baseInput}>
+					<Text style={{ lineHeight: 30 }}>{selectedValue || "请选择"}</Text>
+				</View>
 			</TouchableOpacity>
 			<Modal visible={pickerVisible} transparent animationType="slide">
 				<TouchableOpacity style={styles.modalContainer} onPress={togglePicker}>

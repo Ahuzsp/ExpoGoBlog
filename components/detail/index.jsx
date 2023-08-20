@@ -17,7 +17,7 @@ import HTML from "react-native-render-html"
 
 const contentWidth = Dimensions.get("window").width
 const contentHeight = Dimensions.get("window").height
-export default function DetailsScreen({ route }) {
+export default function DetailScreen({ route }) {
 	const [loading, setLoading] = useState(false)
 	const [detail, setDetail] = useState({})
 	const [userInfo, setUserInfo] = useState({})
@@ -85,17 +85,19 @@ export default function DetailsScreen({ route }) {
 							<Text style={styles.btnText}>关注</Text>
 						</Pressable>
 					</View>
+					{detail.detailContent && (
+						<HTML
+							source={{ html: detail.detailContent }}
+							contentWidth={contentWidth}
+							baseStyle={styles.ft16}
+							tagsStyles={{
+								img: styles.imgTag,
+								code: styles.codeTag,
+								strong: styles.strongTag
+							}}
+						/>
+					)}
 
-					<HTML
-						source={{ html: detail.detailContent }}
-						contentWidth={contentWidth}
-						baseStyle={styles.ft16}
-						tagsStyles={{
-							img: styles.imgTag,
-							code: styles.codeTag,
-							strong: styles.strongTag
-						}}
-					/>
 					{/* <Text>Detail Screen</Text>
 						<Button
 							title="Go to Details... again"
