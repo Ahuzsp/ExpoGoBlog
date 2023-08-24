@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import DetailScreen from "./components/detail/index"
 import WriteScreen from "./view/write"
 import HomeScreen from "./view/home/index"
-import { Button } from "react-native"
+import LoginScreen from "./view/login/index"
 import { RootSiblingParent } from "react-native-root-siblings"
 const Stack = createNativeStackNavigator()
 export default function App() {
@@ -26,6 +26,11 @@ export default function App() {
 						name="Detail"
 						component={DetailScreen}
 						options={{ title: "" }}
+					/>
+					<Stack.Screen
+						name="Login"
+						component={LoginScreen}
+						options={{ title: "登录", headerShown: false }}
 					/>
 				</Stack.Navigator>
 			</NavigationContainer>

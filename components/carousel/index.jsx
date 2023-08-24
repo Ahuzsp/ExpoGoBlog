@@ -1,5 +1,5 @@
 import React from "react"
-import { View, StyleSheet, Image, Dimensions } from "react-native"
+import { View, StyleSheet, Image, Pressable, Dimensions } from "react-native"
 import Swiper from "react-native-swiper"
 
 const Carousel = ({ navigation }) => {
@@ -12,10 +12,10 @@ const Carousel = ({ navigation }) => {
 				dotStyle={styles.dot}
 				activeDotStyle={styles.activeDot}
 			>
-				<View
+				<Pressable
 					style={styles.slide}
 					onPress={() => {
-						avigation.navigate("Detail", { id: 7, userId: 1 })
+						navigation.navigate("Detail", { id: 7, userId: 1 })
 					}}
 				>
 					<Image
@@ -26,8 +26,8 @@ const Carousel = ({ navigation }) => {
 							borderRadius: 15
 						}}
 					/>
-				</View>
-				<View
+				</Pressable>
+				<Pressable
 					style={styles.slide}
 					onPress={() => {
 						navigation.navigate("Detail", { id: 27, userId: 1 })
@@ -41,8 +41,8 @@ const Carousel = ({ navigation }) => {
 							borderRadius: 15
 						}}
 					/>
-				</View>
-				<View
+				</Pressable>
+				<Pressable
 					style={styles.slide}
 					onPress={() => {
 						navigation.navigate("Detail", { id: 12, userId: 1 })
@@ -56,7 +56,7 @@ const Carousel = ({ navigation }) => {
 							borderRadius: 15
 						}}
 					/>
-				</View>
+				</Pressable>
 			</Swiper>
 		</View>
 	)

@@ -1,4 +1,4 @@
-import SettingsScreen from "../setting/index"
+import PersonScreen from "../person/index"
 import ListScreen from "../list/index"
 import HomePage from "../../components/home/HomePage"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -14,7 +14,7 @@ export default function HomeScreen() {
 					let iconName
 					if (route.name === "HomePage") {
 						iconName = focused ? "ios-home" : "ios-home-outline"
-					} else if (route.name === "Settings") {
+					} else if (route.name === "Person") {
 						iconName = focused ? "ios-person" : "ios-person-outline"
 					} else if (route.name === "List") {
 						iconName = focused ? "ios-list" : "ios-list-outline"
@@ -51,9 +51,9 @@ export default function HomeScreen() {
 				component={ListScreen}
 			/>
 			<Tab.Screen
-				name="Settings"
+				name="Person"
 				options={{ title: "个人中心" }}
-				component={SettingsScreen}
+				component={PersonScreen}
 			/>
 		</Tab.Navigator>
 	)
