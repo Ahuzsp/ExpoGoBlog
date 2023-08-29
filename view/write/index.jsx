@@ -213,6 +213,7 @@ export default function WriteScreen({ navigation }) {
 							width: screenWidth / 3 - 20,
 							height: screenWidth / 3 - 20,
 							borderWidth: 1,
+							borderColor: "#999",
 							flexDirection: "row",
 							justifyContent: "center",
 							alignItems: "center",

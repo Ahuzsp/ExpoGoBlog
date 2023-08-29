@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import {
 	View,
 	Image,
@@ -13,8 +13,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context"
 import Toast from "react-native-root-toast"
 import { createUser, userLogin } from "../../api/user"
-import { userInfo, setPersonInfo } from "../../combination/usePerson"
+import { AuthContext } from "../../combination/usePerson"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 const CustomToast = (content, duration = 1000) => {
 	let toast = Toast.show(content, {
 		position: Toast.positions.CENTER
@@ -25,12 +26,13 @@ const CustomToast = (content, duration = 1000) => {
 	}, duration)
 }
 const height = Dimensions.get("window").height
+
 export default function Login({ navigation }) {
 	const [user, setUser] = React.useState({
 		username: "",
 		password: ""
 	})
-
+	const { setCommonUser } = useContext(AuthContext)
 	const [loginState, setLoginState] = React.useState(true)
 	const isClickable = user.username && user.password
 	const getDisableStyle = () => {
@@ -44,14 +46,9 @@ export default function Login({ navigation }) {
 		// 判断是注册还是登录
 		if (loginState) {
 			userLogin(user)
-				.then((res) => {
+				.then(async (res) => {
 					if (res?.code === 0) {
-						console.log(res)
-						setPersonInfo(res.data.user)
-						console.log(userInfo, "userinfo")
-						CustomToast("登录成功")
-						// 返回
-						navigation.goBack()
+						saveUserInfo(res.data.user, "登录成功")
 					} else {
 						CustomToast(res.message)
 					}
@@ -64,8 +61,7 @@ export default function Login({ navigation }) {
 		createUser(user)
 			.then((res) => {
 				if (res.code === 0) {
-					CustomToast("注册并登录成功")
-					navigation.goBack()
+					saveUserInfo(res.data.user, "注册并登录成功")
 				} else {
 					CustomToast(res.message)
 				}
@@ -73,6 +69,13 @@ export default function Login({ navigation }) {
 			.catch((err) => {
 				CustomToast(err.message)
 			})
+	}
+	const saveUserInfo = async (data, msg) => {
+		await AsyncStorage.setItem("user", JSON.stringify(data))
+		setCommonUser(data)
+		CustomToast(msg)
+		// 返回
+		navigation.goBack()
 	}
 	return (
 		<SafeAreaView style={{ padding: 10 }}>

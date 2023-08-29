@@ -1,14 +1,17 @@
-export const userInfo = {
-	username: "",
-	password: "",
-	avatar: "",
-	userId: null
-}
+// AuthContext.js
+import React, { createContext, useState } from "react"
 
-export const setPersonInfo = (data) => {
-	const { username, password, avatar, userId } = data
-	userInfo.username = username
-	userInfo.password = password
-	userInfo.avatar = avatar
-	userInfo.userId = userId
+export const AuthContext = createContext()
+
+export const AuthProvider = ({ children }) => {
+	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const [authUser, setCommonUser] = useState({})
+
+	return (
+		<AuthContext.Provider
+			value={{ isLoggedIn, setIsLoggedIn, authUser, setCommonUser }}
+		>
+			{children}
+		</AuthContext.Provider>
+	)
 }

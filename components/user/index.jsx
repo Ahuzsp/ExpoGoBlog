@@ -1,7 +1,25 @@
-import React from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { TouchableWithoutFeedback, View, Text, Image } from "react-native"
-import { userInfo } from "../../combination/usePerson"
+import { AuthContext } from "../../combination/usePerson"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+
 export default function User({ navigation }) {
+	const { authUser } = useContext(AuthContext)
+	const [userInfo, setUserInfo] = useState({})
+	useEffect(() => {
+		const checkLoginStatus = async () => {
+			// 检查本地是否存在 user
+			const user = await AsyncStorage.getItem("user")
+			if (user) {
+				// 已登录，执行自动登录逻辑
+				setUserInfo(JSON.parse(user))
+			} else {
+				setUserInfo(authUser || {})
+			}
+		}
+
+		checkLoginStatus()
+	}, [authUser])
 	return (
 		<View style={{ padding: 20 }}>
 			{userInfo?.userId ? (
@@ -31,7 +49,7 @@ export default function User({ navigation }) {
 								marginLeft: 15
 							}}
 						>
-							<Text>{userInfo.username}</Text>
+							<Text style={{ fontSize: 20 }}>{userInfo.username}</Text>
 							<Text>等级：初级</Text>
 						</View>
 					</View>

@@ -3,8 +3,7 @@ import ListScreen from "../list/index"
 import HomePage from "../../components/home/HomePage"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import Ionicons from "react-native-vector-icons/Ionicons"
-import { Button, Text } from "react-native"
-import { Pressable } from "react-native"
+
 const Tab = createBottomTabNavigator()
 export default function HomeScreen() {
 	return (
@@ -34,12 +33,12 @@ export default function HomeScreen() {
 					headerTitle: "首页",
 					headerRight: () => {
 						return (
-							<Pressable
-								onPress={() => navigation.navigate("Write")}
+							<Ionicons
+								name="add-circle-outline"
+								size={22}
 								style={{ marginRight: 10 }}
-							>
-								<Text>创作中心+</Text>
-							</Pressable>
+								onPress={() => navigation.navigate("Write")}
+							></Ionicons>
 						)
 					}
 				})}
@@ -52,7 +51,19 @@ export default function HomeScreen() {
 			/>
 			<Tab.Screen
 				name="Person"
-				options={{ title: "个人中心" }}
+				options={({ navigation }) => ({
+					title: "个人中心",
+					headerRight: () => {
+						return (
+							<Ionicons
+								name="ios-settings-outline"
+								size={20}
+								style={{ marginRight: 10 }}
+								onPress={() => navigation.navigate("Setting")}
+							/>
+						)
+					}
+				})}
 				component={PersonScreen}
 			/>
 		</Tab.Navigator>
