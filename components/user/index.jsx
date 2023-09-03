@@ -1,28 +1,48 @@
-import React, { useContext, useEffect, useState } from "react"
-import { TouchableWithoutFeedback, View, Text, Image } from "react-native"
-import { AuthContext } from "../../combination/usePerson"
+import React, { useEffect, useState } from "react"
+import {
+	TouchableWithoutFeedback,
+	View,
+	Text,
+	Image,
+	Dimensions
+} from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-
+import { useSelector, useDispatch } from "react-redux"
+import { login } from "../../store/myActions"
+const screenWidth = Dimensions.get("window").width
 export default function User({ navigation }) {
-	const { authUser } = useContext(AuthContext)
-	const [userInfo, setUserInfo] = useState({})
+	const dispatch = useDispatch()
+	const authUser = useSelector((state) => state.user)
+	console.log(authUser, "authUser")
 	useEffect(() => {
-		const checkLoginStatus = async () => {
-			// 检查本地是否存在 user
-			const user = await AsyncStorage.getItem("user")
-			if (user) {
-				// 已登录，执行自动登录逻辑
-				setUserInfo(JSON.parse(user))
+		const fetchUserInfo = async () => {
+			// 从store中获取用户信息
+			if (authUser.userId) {
+				// 用户已登录，进行相应处理
+				console.log("authUser is logged in")
 			} else {
-				setUserInfo(authUser || {})
+				// 从AsyncStorage中获取用户信息
+				try {
+					const storedUser = await AsyncStorage.getItem("user")
+					if (storedUser) {
+						// 用户信息存在于AsyncStorage中，将用户信息存入store中
+						dispatch(login(JSON.parse(storedUser)))
+						console.log("Stored user is logged in")
+					} else {
+						// 用户信息不存在，不作处理
+						console.log("User is not logged in")
+					}
+				} catch (error) {
+					console.log("Error retrieving user from AsyncStorage:", error)
+				}
 			}
 		}
 
-		checkLoginStatus()
-	}, [authUser])
+		fetchUserInfo()
+	}, [])
 	return (
 		<View style={{ padding: 20 }}>
-			{userInfo?.userId ? (
+			{authUser?.userId ? (
 				<View
 					style={{
 						flexDirection: "row",
@@ -38,7 +58,7 @@ export default function User({ navigation }) {
 						}}
 					>
 						<Image
-							source={{ uri: userInfo.avatar }}
+							source={{ uri: authUser.avatar }}
 							style={{ width: 50, height: 50, borderRadius: 25 }}
 						></Image>
 						<View
@@ -49,11 +69,17 @@ export default function User({ navigation }) {
 								marginLeft: 15
 							}}
 						>
-							<Text style={{ fontSize: 20 }}>{userInfo.username}</Text>
-							<Text>等级：初级</Text>
+							<Text
+								style={{ fontSize: 20, maxWidth: screenWidth / 2 - 20 }}
+								numberOfLines={1}
+								ellipsizeMode="tail"
+							>
+								{authUser.username}
+							</Text>
+							<Text style={{ fontSize: 16 }}>等级：初级</Text>
 						</View>
 					</View>
-					<Text style={{ fontSize: 12 }}>个人主页 ></Text>
+					<Text style={{ fontSize: 16 }}>个人主页 ></Text>
 				</View>
 			) : (
 				<TouchableWithoutFeedback onPress={() => navigation.navigate("Login")}>
@@ -69,7 +95,7 @@ export default function User({ navigation }) {
 							}}
 							style={{ width: 40, height: 40, borderRadius: 20 }}
 						></Image>
-						<Text style={{ marginLeft: 12 }}>登录/注册</Text>
+						<Text style={{ marginLeft: 12, fontSize: 16 }}>登录/注册</Text>
 					</View>
 				</TouchableWithoutFeedback>
 			)}

@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 	itemConatiner: {
 		flexDirection: "row",
 		alignItems: "center",
-		marginBottom: 10,
+		marginTop: 10,
 		height: 120,
 		fontSize: 16,
 		paddingHorizontal: 10,

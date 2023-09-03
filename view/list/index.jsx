@@ -2,14 +2,15 @@ import {
 	View,
 	Image,
 	ActivityIndicator,
-	Button,
 	Dimensions,
 	ScrollView
 } from "react-native"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { apiArticleList } from "../../api/article"
 
 import Item from "./item"
+import CustomPicker from "../../components/picker/CustomPicker"
+import categoryList from "../../combination/useCategory"
 const contentWidth = Dimensions.get("window").width
 const contentHeight = Dimensions.get("window").height
 export default function List({ navigation, route }) {
@@ -21,23 +22,48 @@ export default function List({ navigation, route }) {
 		category = route.params.category
 	}
 	useEffect(() => {
-		function getArticleData() {
-			setLoading(true)
-			apiArticleList({ query: { category } })
-				.then((res) => {
-					if (res.code === 0) {
-						setArticleList(res.data)
-						setLoading(false)
-					}
-				})
-				.catch((err) => {
-					console.log(err)
-				})
-		}
 		getArticleData()
 	}, [category])
+	function getArticleData() {
+		setLoading(true)
+		apiArticleList({ query: { category } })
+			.then((res) => {
+				if (res.code === 0) {
+					setArticleList(res.data)
+				}
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+			.finally(() => setLoading(false))
+	}
+	const handleValuePicker = (val) => {
+		category = val
+		getArticleData()
+	}
 	return (
 		<View>
+			<View
+				style={{
+					backgroundColor: "#fff",
+					paddingHorizontal: articleList.length ? 10 : 0
+				}}
+			>
+				<CustomPicker
+					options={[
+						{
+							url: "",
+							name: "全部",
+							label: "全部",
+							description: "无",
+							value: null
+						},
+						...categoryList
+					]}
+					modelValue={category}
+					onValueChange={(value) => handleValuePicker(value)}
+				/>
+			</View>
 			{isLoading ? (
 				<View style={{ justifyContent: "center", height: contentHeight }}>
 					<ActivityIndicator size="large" color="green" />
@@ -48,7 +74,8 @@ export default function List({ navigation, route }) {
 						style={{
 							flex: 1,
 							alignItems: "center",
-							justifyContent: "center"
+							justifyContent: "center",
+							paddingBottom: 40
 						}}
 					>
 						{articleList.map((item) => {

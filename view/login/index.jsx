@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import {
 	View,
 	Image,
@@ -13,9 +13,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context"
 import Toast from "react-native-root-toast"
 import { createUser, userLogin } from "../../api/user"
-import { AuthContext } from "../../combination/usePerson"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useSelector, useDispatch } from "react-redux"
+import { login } from "../../store/myActions"
 const CustomToast = (content, duration = 1000) => {
 	let toast = Toast.show(content, {
 		position: Toast.positions.CENTER
@@ -28,11 +29,11 @@ const CustomToast = (content, duration = 1000) => {
 const height = Dimensions.get("window").height
 
 export default function Login({ navigation }) {
+	const dispatch = useDispatch()
 	const [user, setUser] = React.useState({
 		username: "",
 		password: ""
 	})
-	const { setCommonUser } = useContext(AuthContext)
 	const [loginState, setLoginState] = React.useState(true)
 	const isClickable = user.username && user.password
 	const getDisableStyle = () => {
@@ -72,7 +73,7 @@ export default function Login({ navigation }) {
 	}
 	const saveUserInfo = async (data, msg) => {
 		await AsyncStorage.setItem("user", JSON.stringify(data))
-		setCommonUser(data)
+		dispatch(login(data))
 		CustomToast(msg)
 		// 返回
 		navigation.goBack()

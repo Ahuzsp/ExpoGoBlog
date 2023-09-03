@@ -1,13 +1,11 @@
 import { View, Text, Button } from "react-native"
 import User from "../../components/user"
+import MyItem from "../../components/user/MyItem"
 export default function PersonScreen({ navigation }) {
 	return (
-		<View>
+		<View style={{ backgroundColor: "white", flex: 1 }}>
 			<User navigation={navigation} />
-			{/* <Button
-				title="Go to Home"
-				onPress={() => navigation.navigate("HomePage")}
-			/> */}
+			<MyItem navigation={navigation}></MyItem>
 		</View>
 	)
 }

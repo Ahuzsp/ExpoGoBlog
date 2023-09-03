@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
 	View,
 	TouchableOpacity,
@@ -10,14 +10,16 @@ import {
 	Dimensions
 } from "react-native"
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window")
-const CustomPicker = ({ options, onValueChange }) => {
+const CustomPicker = ({ options, modelValue, onValueChange }) => {
 	const [selectedValue, setSelectedValue] = useState("")
 	const [pickerVisible, setPickerVisible] = useState(false)
-
+	useEffect(() => {
+		const label = options.find((e) => e.value === modelValue)["label"]
+		setSelectedValue(label)
+	}, [modelValue])
 	const handleSelect = (label, value) => {
 		setSelectedValue(label)
 		setPickerVisible(false)
-		console.log(value)
 		onValueChange(value)
 	}
 
@@ -79,7 +81,9 @@ const styles = StyleSheet.create({
 		borderRadius: 5
 	},
 	optionContainer: {
-		padding: 10
+		padding: 10,
+		borderBottomWidth: 1,
+		borderBottomColor: "#eee"
 	},
 	baseInput: {
 		width: screenWidth - 32,

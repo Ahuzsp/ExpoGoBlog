@@ -11,7 +11,7 @@ import {
 	TouchableOpacity,
 	Pressable
 } from "react-native"
-import { useState, useRef, useLayoutEffect } from "react"
+import { useState, useRef, useLayoutEffect, useEffect } from "react"
 // import { PickerView } from "@ant-design/react-native"
 import Ionicons from "react-native-vector-icons/Ionicons"
 // 分类列表
@@ -22,6 +22,7 @@ import Toast from "react-native-root-toast"
 import * as ImagePicker from "expo-image-picker"
 
 import { addArticle } from "../../api/article"
+import { useSelector, useDispatch } from "react-redux"
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window")
 
 const CustomToast = (content, duration = 1000) => {
@@ -34,6 +35,7 @@ const CustomToast = (content, duration = 1000) => {
 	}, duration)
 }
 export default function WriteScreen({ navigation }) {
+	const authUser = useSelector((state) => state.user)
 	const [imageList, setImageList] = useState([])
 	// 定义数据
 	const formRef = useRef({
@@ -56,13 +58,17 @@ export default function WriteScreen({ navigation }) {
 			CustomToast("请填写内容")
 			return
 		}
+		if (!authUser.userId) {
+			navigation.navigate("Login")
+			return
+		}
 		const params = {
 			articleTitle,
 			abstract,
 			detailContent,
-			author: "zhangshouping",
+			author: authUser.username,
 			wordCount: detailContent.length,
-			userId: 10,
+			userId: authUser.userId,
 			clientType: Platform.OS === "android" ? 2 : 3,
 			category: selectedCategoryValue
 		}
@@ -129,7 +135,7 @@ export default function WriteScreen({ navigation }) {
 				</TouchableOpacity>
 			)
 		})
-	}, [navigation])
+	}, [authUser])
 
 	return (
 		<ScrollView>
@@ -158,7 +164,7 @@ export default function WriteScreen({ navigation }) {
 					<Text style={{ marginVertical: 10 }}>分类</Text>
 					<CustomPicker
 						options={categoryList}
-						selectedValue={selectedCategoryRef.current}
+						modelValue={selectedCategoryRef.current}
 						onValueChange={(value) => {
 							selectedCategoryRef.current = value
 						}}

@@ -1,28 +1,46 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import React, { useContext } from "react"
+import React from "react"
 import { Text, View, StyleSheet, Pressable } from "react-native"
 import { Ionicons } from "react-native-vector-icons"
-import { AuthContext } from "../../combination/usePerson"
+import { UseSelector, useDispatch } from "react-redux"
+import { loginoutAction } from "../../store/myActions"
 const settingList = [
 	{ label: "编辑资料", value: 1 },
 	{ label: "账号设置", value: 2 },
-	{ label: "关于", value: 3 }
+	{ label: "隐私政策", value: 3 }
 ]
 export default function SettingScreen({ navigation }) {
-	const { setCommonUser } = useContext(AuthContext)
+	const dispath = useDispatch()
 	const loginout = async () => {
 		await AsyncStorage.removeItem("user")
-		setCommonUser({})
+		dispath(loginoutAction({}))
 		navigation.goBack()
+	}
+	const handleBtnClick = (value) => {
+		switch (value) {
+			case 1:
+				navigation.navigate("EditInfo")
+				break
+			case 2:
+				navigation.navigate("Setting")
+				break
+			case 3:
+				navigation.navigate("PrivacyPolicy")
+				break
+		}
 	}
 	return (
 		<View>
 			{settingList.map((li) => {
 				return (
-					<View key={li.value} style={styles.li}>
+					<Pressable
+						key={li.value}
+						style={styles.li}
+						onPress={() => handleBtnClick(li.value)}
+					>
 						<Text>{li.label}</Text>
 						<Ionicons name="chevron-forward-outline" size={20} color="gray" />
-					</View>
+					</Pressable>
 				)
 			})}
 			<Pressable style={styles.loginout} onPress={loginout}>

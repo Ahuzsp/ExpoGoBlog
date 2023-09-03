@@ -58,7 +58,7 @@ export default function HomeScreen() {
 							<Ionicons
 								name="ios-settings-outline"
 								size={20}
-								style={{ marginRight: 10 }}
+								style={{ marginRight: 20 }}
 								onPress={() => navigation.navigate("Setting")}
 							/>
 						)
