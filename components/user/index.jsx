@@ -4,11 +4,13 @@ import {
 	View,
 	Text,
 	Image,
+	Pressable,
 	Dimensions
 } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useSelector, useDispatch } from "react-redux"
 import { login } from "../../store/myActions"
+import IonIcons from "react-native-vector-icons/Ionicons"
 const screenWidth = Dimensions.get("window").width
 export default function User({ navigation }) {
 	const dispatch = useDispatch()
@@ -70,7 +72,11 @@ export default function User({ navigation }) {
 							}}
 						>
 							<Text
-								style={{ fontSize: 20, maxWidth: screenWidth / 2 - 20 }}
+								style={{
+									fontSize: 20,
+									fontWeight: 600,
+									maxWidth: screenWidth / 2 - 20
+								}}
 								numberOfLines={1}
 								ellipsizeMode="tail"
 							>
@@ -79,7 +85,17 @@ export default function User({ navigation }) {
 							<Text style={{ fontSize: 16 }}>等级：初级</Text>
 						</View>
 					</View>
-					<Text style={{ fontSize: 16 }}>个人主页 ></Text>
+					<Pressable
+						style={{ flexDirection: "row" }}
+						onPress={() => navigation.navigate("PersonPageScreen")}
+					>
+						<Text style={{ fontSize: 16 }}>个人主页</Text>
+						<IonIcons
+							name="chevron-forward-outline"
+							size={20}
+							color="gray"
+						></IonIcons>
+					</Pressable>
 				</View>
 			) : (
 				<TouchableWithoutFeedback onPress={() => navigation.navigate("Login")}>

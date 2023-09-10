@@ -7,11 +7,10 @@ const initialState = {
 	categoryOption: {},
 	// tabList: ["个人信息", "我的文章", "我的评论", "我的关注", "我的收藏"]
 	tabList: [
-		{ label: "个人信息", route: "info" },
-		{ label: "我的文章", route: "article" },
-		{ label: "我的评论", route: "comment" },
-		{ label: "我的关注", route: "follow" },
-		{ label: "我的收藏", route: "collection" }
+		{ label: "文章", route: "List", count: 0, id: 1 },
+		{ label: "关注", route: "List", count: 0, id: 2 },
+		{ label: "收藏", route: "List", count: 0, id: 3 },
+		{ label: "点赞", route: "List", count: 0, id: 4 }
 	]
 }
 export default function myReducer(state = initialState, action) {

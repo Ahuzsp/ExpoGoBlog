@@ -1,22 +1,16 @@
 import React from "react"
-import { View, Pressable, StyleSheet, Text, Dimensions } from "react-native"
+import { View, Pressable, StyleSheet, Text } from "react-native"
 import { useSelector } from "react-redux"
-const screenWidth = Dimensions.get("window").width
-const category = [
-	{ label: "文章", route: "List", count: 0, id: 1 },
-	{ label: "关注", route: "List", count: 0, id: 2 },
-	{ label: "收藏", route: "List", count: 0, id: 3 },
-	{ label: "点赞", route: "List", count: 0, id: 4 }
-]
 
 export default function MyItem({ navigation }) {
 	const authUser = useSelector((state) => state.user)
+	const tabList = useSelector((state) => state.tabList)
 	const enterColl = () => {
 		authUser?.userId ? alert("已登录") : navigation.navigate("Login")
 	}
 	return (
 		<View style={styles.itemWrap}>
-			{category.map((item) => {
+			{tabList.map((item) => {
 				return (
 					<Pressable style={styles.item} key={item.id} onPress={enterColl}>
 						<Text style={{ fontSize: 16 }}>{item.label}</Text>

@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Image, Text, View } from "react-native"
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import DetailScreen from "./components/detail/index"
@@ -7,8 +8,8 @@ import HomeScreen from "./view/home/index"
 import LoginScreen from "./view/login/index"
 import SettingScreen from "./view/setting/index"
 import PrivacyPolicy from "./view/privacyPolicy/index"
+import PersonPageScreen from "./view/person/myPage"
 import { RootSiblingParent } from "react-native-root-siblings"
-// import { AuthProvider } from "./combination/usePerson"
 import EditInfo from "./view/setting/editInfo"
 import { Provider } from "react-redux"
 import store from "./store/index"
@@ -57,7 +58,24 @@ export default function App() {
 							component={PrivacyPolicy}
 							options={{
 								title: "隐私政策"
-								// headerShadowVisible: false 这是控制头部阴影的
+							}}
+						/>
+						<Stack.Screen
+							name="PersonPageScreen"
+							component={PersonPageScreen}
+							options={{
+								title: "我的",
+								// header: () => <CustomHeader />
+								headerBackground: () => (
+									<Image
+										style={{
+											flex: 1,
+											resizeMode: "cover",
+											alignItems: "center"
+										}}
+										source={require("./assets/category/css.png")}
+									/>
+								)
 							}}
 						/>
 					</Stack.Navigator>

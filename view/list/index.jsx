@@ -3,9 +3,10 @@ import {
 	Image,
 	ActivityIndicator,
 	Dimensions,
-	ScrollView
+	ScrollView,
+	RefreshControl
 } from "react-native"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { apiArticleList } from "../../api/article"
 
 import Item from "./item"
@@ -16,7 +17,7 @@ const contentHeight = Dimensions.get("window").height
 export default function List({ navigation, route }) {
 	const [isLoading, setLoading] = useState(false)
 	const [articleList, setArticleList] = useState([])
-	let category = 1
+	let category = null
 
 	if (route && route.params && route.params.category) {
 		category = route.params.category
@@ -30,6 +31,7 @@ export default function List({ navigation, route }) {
 			.then((res) => {
 				if (res.code === 0) {
 					setArticleList(res.data)
+					setRefreshing(false)
 				}
 			})
 			.catch((err) => {
@@ -41,6 +43,12 @@ export default function List({ navigation, route }) {
 		category = val
 		getArticleData()
 	}
+	const [refreshing, setRefreshing] = useState(false)
+	const onRefresh = useCallback(() => {
+		setRefreshing(true)
+
+		getArticleData()
+	}, [])
 	return (
 		<View>
 			<View
@@ -69,7 +77,11 @@ export default function List({ navigation, route }) {
 					<ActivityIndicator size="large" color="green" />
 				</View>
 			) : articleList.length ? (
-				<ScrollView>
+				<ScrollView
+					refreshControl={
+						<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+					}
+				>
 					<View
 						style={{
 							flex: 1,

@@ -14,8 +14,8 @@ const CustomPicker = ({ options, modelValue, onValueChange }) => {
 	const [selectedValue, setSelectedValue] = useState("")
 	const [pickerVisible, setPickerVisible] = useState(false)
 	useEffect(() => {
-		const label = options.find((e) => e.value === modelValue)["label"]
-		setSelectedValue(label)
+		const item = options.find((e) => e.value === modelValue)
+		setSelectedValue(item?.label || modelValue)
 	}, [modelValue])
 	const handleSelect = (label, value) => {
 		setSelectedValue(label)
