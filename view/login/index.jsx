@@ -15,8 +15,8 @@ import Toast from "react-native-root-toast"
 import { createUser, userLogin } from "../../api/user"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useSelector, useDispatch } from "react-redux"
 import { login } from "../../store/myActions"
+import { useDispatch } from "react-redux"
 const CustomToast = (content, duration = 1000) => {
 	let toast = Toast.show(content, {
 		position: Toast.positions.CENTER
@@ -47,7 +47,7 @@ export default function Login({ navigation }) {
 		// 判断是注册还是登录
 		if (loginState) {
 			userLogin(user)
-				.then(async (res) => {
+				.then((res) => {
 					if (res?.code === 0) {
 						saveUserInfo(res.data.user, "登录成功")
 					} else {

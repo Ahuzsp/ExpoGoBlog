@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import React from "react"
 import { Text, View, StyleSheet, Pressable } from "react-native"
 import { Ionicons } from "react-native-vector-icons"
-import { UseSelector, useDispatch } from "react-redux"
+import { useDispatch } from "react-redux"
 import { loginoutAction } from "../../store/myActions"
 const settingList = [
 	{ label: "编辑资料", value: 1 },

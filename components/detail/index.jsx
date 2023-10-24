@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import {
 	View,
 	Text,
@@ -8,35 +8,140 @@ import {
 	ScrollView,
 	Dimensions,
 	Pressable,
+	TouchableOpacity,
 	ActivityIndicator
 } from "react-native"
 import moment from "moment"
-import { getDetailById } from "../../api/article"
+import {
+	getDetailById,
+	collect,
+	follow,
+	queryArticleReleate
+} from "../../api/article"
 import { getUserInfoByUserId } from "../../api/user"
 import HTML from "react-native-render-html"
-
+import { useSelector } from "react-redux"
+import Toast from "react-native-root-toast"
+import IonIcons from "react-native-vector-icons/Ionicons"
 const contentWidth = Dimensions.get("window").width
 const contentHeight = Dimensions.get("window").height
-export default function DetailScreen({ route }) {
+// toast
+const CustomToast = (content, duration = 1000) => {
+	let toast = Toast.show(content, {
+		position: Toast.positions.CENTER
+	})
+
+	setTimeout(function hideToast() {
+		Toast.hide(toast)
+	}, duration)
+}
+export default function DetailScreen({ route, navigation }) {
+	const authUser = useSelector((state) => state.user)
 	const [loading, setLoading] = useState(false)
 	const [detail, setDetail] = useState({})
 	const [userInfo, setUserInfo] = useState({})
-	const { userId, id } = route.params
+	const [userBehavior, setUserBehavior] = useState({})
+	const { id } = route.params
 	useEffect(() => {
-		async function featchData() {
+		const onFocus = async () => {
 			setLoading(true)
-			const user = getUserInfoByUserId({ userId })
-			const article = getDetailById({ articleId: id })
-			const res = await Promise.all([user, article]).catch((err) =>
-				alert(err.message)
-			)
-			setDetail(res[1].data)
-			setUserInfo(res[0].data)
-			setLoading(false)
+			getDetailById({ articleId: id })
+				.then(async (res) => {
+					if (res.code === 0) {
+						setDetail(res?.data || {})
+						const user = await getUserInfoByUserId({
+							userId: res.data?.userId || 0
+						})
+						setUserInfo(user.data)
+						setLoading(false)
+						if (!authUser.userId) return
+						// 注意useState的异步赋值
+						const query = {
+							userId: authUser.userId,
+							authorId: user.data.userId,
+							articleId: res.data.articleId
+						}
+						getBehavior(query)
+					}
+				})
+				.catch((err) => {
+					console.log(err, "获取文章详情出错")
+				})
 		}
-		featchData()
+		onFocus()
 	}, [id])
-
+	useLayoutEffect(() => {
+		navigation.setOptions({
+			headerRight: () => (
+				<TouchableOpacity
+					onPress={() => handleColllect(userBehavior?.isCollect)}
+				>
+					<IonIcons
+						name={
+							userBehavior?.isCollect
+								? "heart-dislike-outline"
+								: "heart-outline"
+						}
+						size={24}
+						color={"black"}
+					/>
+				</TouchableOpacity>
+			)
+		})
+	}, [userBehavior.isCollect])
+	// 获取用户点赞收藏关注状态
+	const getBehavior = async (query) => {
+		const res = await queryArticleReleate(query).catch((err) => {
+			console.log(err, "获取用户相关出错")
+		})
+		setUserBehavior(res?.data || {})
+	}
+	const handleColllect = (isCollect) => {
+		if (!authUser.userId) {
+			navigation.navigate("Login")
+			return
+		}
+		collect({ userId: authUser.userId, articleId: id })
+			.then((res) => {
+				if (res.code === 0) {
+					getBehavior({
+						userId: authUser.userId,
+						authorId: detail.userId,
+						articleId: detail.articleId
+					})
+					CustomToast(res.msg)
+				}
+			})
+			.catch((err) => {
+				console.log("====================================")
+				console.log(err, "err")
+				console.log("====================================")
+				CustomToast("收藏失败")
+			})
+	}
+	// 关注
+	const enterColl = (isFollow) => {
+		if (!authUser.userId) {
+			navigation.navigate("Login")
+			return
+		}
+		follow({ followerId: authUser.userId, followId: detail.userId })
+			.then((res) => {
+				if (res.code === 0) {
+					getBehavior({
+						userId: authUser.userId,
+						authorId: detail.userId,
+						articleId: detail.articleId
+					})
+					CustomToast(res.msg)
+				} else {
+					CustomToast("关注失败,该用户不存在")
+				}
+			})
+			.catch(() => {
+				CustomToast("关注失败")
+			})
+	}
 	return (
 		<ScrollView>
 			{loading ? (
@@ -54,7 +159,7 @@ export default function DetailScreen({ route }) {
 							style={{ flexDirection: "row", justifyContent: "space-between" }}
 						>
 							<Image
-								source={{ uri: userInfo.avatar }}
+								source={{ uri: userInfo?.avatar }}
 								style={{ width: 50, height: 50, borderRadius: 25 }}
 							></Image>
 							<View
@@ -81,8 +186,11 @@ export default function DetailScreen({ route }) {
 								{ backgroundColor: pressed ? "#409EFF" : "#66b1ff" },
 								styles.btn
 							]}
+							onPress={() => enterColl(userBehavior.isFollow)}
 						>
-							<Text style={styles.btnText}>关注</Text>
+							<Text style={styles.btnText}>
+								{userBehavior?.isFollow ? "取消关注" : "关注"}
+							</Text>
 						</Pressable>
 					</View>
 					{detail.detailContent && (

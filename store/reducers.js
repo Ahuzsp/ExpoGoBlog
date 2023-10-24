@@ -3,14 +3,14 @@ const initialState = {
 	isLoggedIn: false,
 	error: null,
 	user: {},
+	behavior: {},
 	isLoading: false,
 	categoryOption: {},
-	// tabList: ["个人信息", "我的文章", "我的评论", "我的关注", "我的收藏"]
 	tabList: [
-		{ label: "文章", route: "List", count: 0, id: 1 },
-		{ label: "关注", route: "List", count: 0, id: 2 },
-		{ label: "收藏", route: "List", count: 0, id: 3 },
-		{ label: "点赞", route: "List", count: 0, id: 4 }
+		{ label: "文章", route: "ArticleList", id: 1, countKey: "articleCount" },
+		{ label: "关注", route: "FollowList", id: 2, countKey: "followCount" },
+		{ label: "收藏", route: "CollectList", id: 3, countKey: "bookmarkCount" },
+		{ label: "点赞", route: "LikeList", id: 4, countKey: "likeCount" }
 	]
 }
 export default function myReducer(state = initialState, action) {
@@ -24,6 +24,11 @@ export default function myReducer(state = initialState, action) {
 			return {
 				...state,
 				user: {}
+			}
+		case "SET_BEHAVIOE":
+			return {
+				...state,
+				behavior: action.payload
 			}
 		default:
 			return state

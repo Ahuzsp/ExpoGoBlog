@@ -7,41 +7,11 @@ import {
 	Pressable,
 	Dimensions
 } from "react-native"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useSelector, useDispatch } from "react-redux"
-import { login } from "../../store/myActions"
+import { useSelector } from "react-redux"
 import IonIcons from "react-native-vector-icons/Ionicons"
 const screenWidth = Dimensions.get("window").width
 export default function User({ navigation }) {
-	const dispatch = useDispatch()
 	const authUser = useSelector((state) => state.user)
-	console.log(authUser, "authUser")
-	useEffect(() => {
-		const fetchUserInfo = async () => {
-			// 从store中获取用户信息
-			if (authUser.userId) {
-				// 用户已登录，进行相应处理
-				console.log("authUser is logged in")
-			} else {
-				// 从AsyncStorage中获取用户信息
-				try {
-					const storedUser = await AsyncStorage.getItem("user")
-					if (storedUser) {
-						// 用户信息存在于AsyncStorage中，将用户信息存入store中
-						dispatch(login(JSON.parse(storedUser)))
-						console.log("Stored user is logged in")
-					} else {
-						// 用户信息不存在，不作处理
-						console.log("User is not logged in")
-					}
-				} catch (error) {
-					console.log("Error retrieving user from AsyncStorage:", error)
-				}
-			}
-		}
-
-		fetchUserInfo()
-	}, [])
 	return (
 		<View style={{ padding: 20 }}>
 			{authUser?.userId ? (

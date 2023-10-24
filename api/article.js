@@ -12,3 +12,12 @@ export const addArticle = (data = {}) => {
 export const upload = (data = {}) => {
 	return service.post("upload/upload", data)
 }
+export const collect = (data = {}) => {
+	return service.post("article/collect", data)
+}
+export const follow = (data = {}) => {
+	return service.post("article/follow", data)
+}
+export const queryArticleReleate = (query = {}) => {
+	return service.get("article/queryArticleReleate", { query })
+}

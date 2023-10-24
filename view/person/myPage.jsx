@@ -1,64 +1,159 @@
-import React, { useState } from "react"
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
+import React, { useEffect, useLayoutEffect, useState } from "react"
+import {
+	View,
+	Text,
+	Image,
+	Dimensions,
+	ScrollView,
+	ActivityIndicator
+} from "react-native"
+import { TabView, TabBar, SceneMap } from "react-native-tab-view"
 import { useSelector } from "react-redux"
-import Ionicon from "react-native-vector-icons/Ionicons"
-import ScrollableTabView, {
-	ScrollableTabBar,
-	DefaultTabBar
-} from "react-native-scrollable-tab-view"
-export default function MyPage() {
-	const tabList = useSelector((state) => state.tabList)
-	const [activeTab, setActiveTab] = useState(1)
-	return (
-		<>
+import { getUserReleateList } from "../../api/user"
+import Item from "../list/item"
+const screenWidth = Dimensions.get("window").width
+const screenHeight = Dimensions.get("window").height
+const ArticleList = ({ data, navigation }) => {
+	return data?.length ? (
+		<ScrollView>
 			<View
 				style={{
-					flexDirection: "row",
-					justifyContent: "space-between",
+					flex: 1,
 					alignItems: "center",
-					marginTop: 20,
-					paddingHorizontal: 24,
-					paddingBottom: 10,
-					borderBottomWidth: 1,
-					borderBottomColor: "#E5E5E5"
+					justifyContent: "center",
+					paddingBottom: 40
 				}}
 			>
-				{tabList.map((tab) => {
+				{data.map((item) => {
 					return (
-						<TouchableOpacity
-							key={tab.id}
-							style={styles.tabItem}
-							onPress={() => setActiveTab(tab.id)}
+						<Item key={item.articleId} item={item} navigation={navigation} />
+					)
+				})}
+			</View>
+		</ScrollView>
+	) : (
+		<View
+			style={{
+				justifyContent: "center",
+				height: screenHeight
+			}}
+		>
+			<ActivityIndicator size="large" color="green" />
+		</View>
+	)
+}
+
+const FollowList = ({ data }) => {
+	return data?.length ? (
+		<ScrollView>
+			<View style={{ height: screenHeight }}>
+				{data.map((item) => (
+					<View
+						key={item.userId}
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							paddingHorizontal: 15,
+							paddingVertical: 5,
+							maxHeight: 60,
+							marginTop: 10,
+							backgroundColor: "#999"
+						}}
+					>
+						<Image
+							source={{ uri: item.avatar }}
+							style={{ width: 50, height: 50, borderRadius: 25 }}
+						></Image>
+						<View
+							style={{
+								flexDirection: "column",
+								height: "100%",
+								justifyContent: "space-between",
+								marginLeft: 15
+							}}
 						>
 							<Text
 								style={{
-									fontSize: 16,
-									color: activeTab === tab.id ? "#07c160" : "#000"
+									fontSize: 20,
+									fontWeight: 600,
+									maxWidth: screenWidth / 2 - 20
 								}}
+								numberOfLines={1}
+								ellipsizeMode="tail"
 							>
-								{tab.label}
+								{item.username}
 							</Text>
-							{tab.id === activeTab && <View style={styles.underline} />}
-						</TouchableOpacity>
-					)
-				})}
-				<Ionicon name="search-outline" size={24} color="gray"></Ionicon>
+							<Text style={{ fontSize: 16 }}>等级：初级</Text>
+						</View>
+					</View>
+				))}
 			</View>
-		</>
+		</ScrollView>
+	) : (
+		<Text>暂无数据</Text>
 	)
 }
-const styles = StyleSheet.create({
-	tabItem: {
-		position: "relative"
-	},
-	underline: {
-		position: "absolute",
-		height: 4,
-		borderRadius: 2,
-		width: 28,
-		backgroundColor: "#07c160",
-		position: "absolute",
-		top: 24,
-		left: 2
-	}
-})
+
+const defauliLayout = { width: screenWidth, height: screenHeight }
+const MyPage = ({ navigation, route }) => {
+	const item = useSelector((state) => state.user)
+	const tabList = useSelector((state) => state.tabList)
+	const [index, setIndex] = useState(route.params?.id || 0)
+	const [leaderBoardData, setLeaderBoardData] = useState({})
+	useLayoutEffect(() => {
+		getUserReleateList({ userId: item.userId })
+			.then((res) => {
+				setLeaderBoardData(res.data)
+			})
+			.catch((err) => {
+				console.log(err, "err")
+			})
+	}, [item.userId])
+
+	const routes = []
+	tabList.forEach((el) => {
+		routes.push({
+			key: el.id,
+			title: el.label
+		})
+	})
+	return (
+		<TabView
+			navigationState={{ index, routes }}
+			renderScene={SceneMap({
+				1: () => (
+					<ArticleList
+						data={leaderBoardData.articleList}
+						navigation={navigation}
+					/>
+				),
+				2: () => <FollowList data={leaderBoardData.followList} />,
+				3: () => (
+					<ArticleList
+						data={leaderBoardData.collectList}
+						navigation={navigation}
+					/>
+				),
+				4: () => (
+					<ArticleList
+						data={leaderBoardData.likeList}
+						navigation={navigation}
+					/>
+				)
+			})}
+			renderTabBar={(props) => (
+				<TabBar
+					{...props}
+					activeColor="#07c160"
+					labelStyle={{ color: "#000" }}
+					style={{ backgroundColor: "#fff" }}
+					indicatorStyle={{ backgroundColor: "#07c160" }}
+				/>
+			)}
+			onIndexChange={setIndex}
+			initialLayout={defauliLayout}
+		/>
+	)
+}
+
+export default MyPage
