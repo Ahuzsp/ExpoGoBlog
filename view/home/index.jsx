@@ -12,11 +12,11 @@ export default function HomeScreen() {
 				tabBarIcon: ({ focused, color, size }) => {
 					let iconName
 					if (route.name === "HomePage") {
-						iconName = focused ? "ios-home" : "ios-home-outline"
+						iconName = focused ? "home" : "home-outline"
 					} else if (route.name === "Person") {
-						iconName = focused ? "ios-person" : "ios-person-outline"
+						iconName = focused ? "person" : "person-outline"
 					} else if (route.name === "List") {
-						iconName = focused ? "ios-list" : "ios-list-outline"
+						iconName = focused ? "list" : "list-outline"
 					}
 					// You can return any component that you like here!
 					return <Ionicons name={iconName} size={size} color={color} />
@@ -56,7 +56,7 @@ export default function HomeScreen() {
 					headerRight: () => {
 						return (
 							<Ionicons
-								name="ios-settings-outline"
+								name="settings-outline"
 								size={20}
 								style={{ marginRight: 20 }}
 								onPress={() => navigation.navigate("Setting")}

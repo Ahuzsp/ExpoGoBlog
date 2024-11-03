@@ -7,7 +7,6 @@ import {
 	Dimensions,
 	TouchableWithoutFeedback
 } from "react-native"
-import moment from "moment"
 
 const Item = ({ item, navigation }) => {
 	return (
@@ -15,10 +14,19 @@ const Item = ({ item, navigation }) => {
 			onPress={() => navigation.navigate("Detail", { id: item.articleId })}
 		>
 			<View style={styles.itemConatiner}>
-				<Image
-					source={{ uri: "http:ahuzsp.top/images/1.jpg" }}
-					style={{ width: 100, height: 100, borderRadius: 10, marginRight: 10 }}
-				/>
+				{item.cover ? (
+					<Image
+						source={{ uri: item.cover }}
+						style={{
+							width: 100,
+							height: 100,
+							borderRadius: 10,
+							marginRight: 10
+						}}
+					/>
+				) : (
+					""
+				)}
 				<View style={styles.info}>
 					<Text numberOfLines={1} ellipsizeMode="tail" style={styles.title}>
 						{item.articleTitle}
@@ -32,7 +40,7 @@ const Item = ({ item, navigation }) => {
 							阅读:&nbsp;{item.readCount ?? 0}
 						</Text>
 						<Text style={{ marginRight: 10, color: "rgb(255, 128, 0)" }}>
-							{moment(+item.releaseTime).format("YYYY-MM-DD HH:mm:ss")}
+							{item.createTime}
 						</Text>
 						<Text>{item.category}</Text>
 					</View>

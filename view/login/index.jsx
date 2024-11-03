@@ -81,7 +81,7 @@ export default function Login({ navigation }) {
 	return (
 		<SafeAreaView style={{ padding: 10 }}>
 			<Ionicons
-				name="ios-close"
+				name="close"
 				size={28}
 				color="gray"
 				onPress={() => navigation.goBack()}

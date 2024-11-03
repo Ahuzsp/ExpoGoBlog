@@ -227,7 +227,7 @@ export default function WriteScreen({ navigation }) {
 						}}
 						onPress={pickImage}
 					>
-						<Ionicons name="ios-add" size={32} color="#999" />
+						<Ionicons name="add" size={32} color="#999" />
 					</Pressable>
 				</View>
 			</View>

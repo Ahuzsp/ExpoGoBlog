@@ -2,7 +2,7 @@ import axios from "axios"
 //引入qs模块，用来序列化post类型的数据
 
 axios.defaults.timeout = 15000
-const basicUrl = "http://192.168.10.105:8000"
+const basicUrl = "https://serve-ahuzsp.top/api/"
 
 //设置axios基础路径
 const service = axios.create({

@@ -2,7 +2,7 @@ import service from "../axios"
 
 export const createUser = (data = {}) => service.post("/login/createUser", data)
 
-export const userLogin = (data = {}) => service.post("login/userLogin", data)
+export const userLogin = (data = {}) => service.post("users/login", data)
 // 更新用户信息
 export const updateUserInfo = (data = {}) =>
 	service.post("login/updateUserInfo", data)

@@ -1,5 +1,12 @@
 import React from "react"
-import { View, StyleSheet, Image, Pressable, Dimensions } from "react-native"
+import {
+	View,
+	Text,
+	StyleSheet,
+	Image,
+	Pressable,
+	Dimensions
+} from "react-native"
 import Swiper from "react-native-swiper"
 
 const Carousel = ({ navigation }) => {
@@ -19,11 +26,10 @@ const Carousel = ({ navigation }) => {
 					}}
 				>
 					<Image
-						source={{ uri: "http:ahuzsp.top/images/4.jpg" }}
+						source={{ uri: "https://i.ibb.co/nL4JPtw/dog.jpg" }}
 						style={{
 							width: Dimensions.get("window").width,
-							height: 150,
-							borderRadius: 15
+							height: 150
 						}}
 					/>
 				</Pressable>
@@ -34,11 +40,10 @@ const Carousel = ({ navigation }) => {
 					}}
 				>
 					<Image
-						source={{ uri: "http:ahuzsp.top/images/2.jpg" }}
+						source={{ uri: "https://i.ibb.co/nL4JPtw/dog.jpg" }}
 						style={{
 							width: Dimensions.get("window").width,
-							height: 150,
-							borderRadius: 15
+							height: 150
 						}}
 					/>
 				</Pressable>
@@ -49,11 +54,10 @@ const Carousel = ({ navigation }) => {
 					}}
 				>
 					<Image
-						source={{ uri: "http:ahuzsp.top/images/3.jpg" }}
+						source={{ uri: "https://i.ibb.co/nL4JPtw/dog.jpg" }}
 						style={{
 							width: Dimensions.get("window").width,
-							height: 150,
-							borderRadius: 15
+							height: 150
 						}}
 					/>
 				</Pressable>
@@ -73,13 +77,8 @@ const styles = StyleSheet.create({
 	slide: {
 		flex: 1,
 		justifyContent: "center",
-		alignItems: "center"
-	},
-	dot: {
-		display: "none"
-	},
-	activeDot: {
-		display: "none"
+		alignItems: "center",
+		borderRadius: 5
 	}
 })
 
